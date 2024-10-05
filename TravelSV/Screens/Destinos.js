@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
 
 export default function Destinos() {
+  const { width } = useWindowDimensions(); // Hook para detectar el tamaño de la pantalla
+
   // Datos locales de departamentos y sus lugares turísticos
   const departamentosData = [
     {
@@ -213,40 +215,16 @@ export default function Destinos() {
     },
   ];
 
-  const [selectedDept, setSelectedDept] = useState(null);  // Departamento seleccionado
-
-  const handleDeptSelection = (dept) => {
-    setSelectedDept(dept);
-  };
-
   return (
     <View style={styles.container}>
-      
-
-      {selectedDept === null ? (
-        <ScrollView contentContainerStyle={styles.cardContainer}>
-          {departamentosData.map((dept, index) => (
-            <TouchableOpacity key={index} style={styles.card} onPress={() => handleDeptSelection(dept)}>
-              <Image source={{ uri: dept.imagen }} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>{dept.nombre}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      ) : (
-        <ScrollView>
-          <Text style={styles.subtitle}>Lugares turísticos en {selectedDept.nombre}</Text>
-          {selectedDept.lugares.map((lugar, index) => (
-            <View key={index} style={styles.lugarCard}>
-              <Image source={{ uri: lugar.imagen }} style={styles.lugarImage} />
-              <Text style={styles.lugarTitle}>{lugar.nombre}</Text>
-              <Text style={styles.lugarDescripcion}>{lugar.descripcion}</Text>
-            </View>
-          ))}
-          <TouchableOpacity style={styles.backButton} onPress={() => setSelectedDept(null)}>
-            <Text style={styles.backButtonText}>Volver a departamentos</Text>
+      <ScrollView contentContainerStyle={[styles.cardContainer, { flexDirection: width > 768 ? 'column' : 'row' }]}>
+        {departamentosData.map((dept, index) => (
+          <TouchableOpacity key={index} style={[styles.card, { width: width > 768 ? '100%' : '48%' }]}>
+            <Image source={{ uri: dept.imagen }} style={styles.cardImage} />
+            <Text style={styles.cardTitle}>{dept.nombre}</Text>
           </TouchableOpacity>
-        </ScrollView>
-      )}
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -254,85 +232,38 @@ export default function Destinos() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#D9F0FF',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#6F73D2',
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#6F73D2',
-    marginBottom: 10,
+    padding: 20, // Incrementa el padding para mayor separación en la web
+    backgroundColor: '#f4f4f4',
   },
   cardContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
   card: {
-    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 10,
-    marginBottom: 15,
+    marginBottom: 20, // Aumenta el espacio entre las tarjetas
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2, // Sombras más marcadas para mayor efecto de elevación
     shadowRadius: 5,
+    overflow: 'hidden', // Oculta cualquier parte que sobresalga
   },
   cardImage: {
     width: '100%',
-    height: 100,
+    height: 200, // Fija el tamaño de la imagen para evitar que se deforme
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    resizeMode: 'cover', // Ajusta la imagen para que siempre se vea bien
+  },
+  cardContent: {
+    padding: 15, // Añade padding dentro de cada tarjeta para el texto
+    alignItems: 'center',
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 18, // Fuente más grande para una mejor legibilidad
     fontWeight: 'bold',
     textAlign: 'center',
-    padding: 10,
-    color: '#6F73D2',
-  },
-  lugarCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  lugarImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-  },
-  lugarTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-    color: '#6F73D2',
-  },
-  lugarDescripcion: {
-    fontSize: 14,
-    marginTop: 5,
-    color: '#6f6f6f',
-  },
-  backButton: {
-    marginTop: 20,
-    backgroundColor: '#6F73D2',
-    padding: 10,
-    borderRadius: 5,
-  },
-  backButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: '#3B3B98',
   },
 });

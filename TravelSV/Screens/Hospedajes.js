@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
 
 export default function Hospedaje() {
+  const { width } = useWindowDimensions(); // Hook para detectar el tamaño de la pantalla
+
   // Datos locales de departamentos y sus lugares de hospedaje
   const departamentosHospedaje = [
     {
@@ -222,8 +224,6 @@ export default function Hospedaje() {
 
   return (
     <View style={styles.container}>
-      
-
       {selectedDept === null ? (
         <ScrollView contentContainerStyle={styles.cardContainer}>
           {departamentosHospedaje.map((dept, index) => (
