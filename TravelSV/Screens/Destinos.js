@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, useWindowDimensions} from 'react-native';
 
 export default function Destinos() {
-  const { width } = useWindowDimensions(); // Hook para detectar el tamaño de la pantalla
+  const { width } = useWindowDimensions();
+  const [selectedDept, setSelectedDept] = useState(null);  // Estado del departamento seleccionado
 
-  // Datos locales de departamentos y sus lugares turísticos
+  // Datos locales de departamentos y destinos turísticos
   const departamentosData = [
     {
       nombre: 'San Salvador',
@@ -215,16 +216,36 @@ export default function Destinos() {
     },
   ];
 
+  const handleDeptSelection = (dept) => {
+    setSelectedDept(dept);  // Actualizar el estado con el departamento seleccionado
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={[styles.cardContainer, { flexDirection: width > 768 ? 'column' : 'row' }]}>
-        {departamentosData.map((dept, index) => (
-          <TouchableOpacity key={index} style={[styles.card, { width: width > 768 ? '100%' : '48%' }]}>
-            <Image source={{ uri: dept.imagen }} style={styles.cardImage} />
-            <Text style={styles.cardTitle}>{dept.nombre}</Text>
+      {selectedDept === null ? (
+        <ScrollView contentContainerStyle={styles.cardContainer}>
+          {departamentosData.map((dept, index) => (
+            <TouchableOpacity key={index} style={[styles.card, width > 768 ? styles.cardWeb : null]} onPress={() => handleDeptSelection(dept)}>
+              <Image source={{ uri: dept.imagen }} style={styles.cardImage} />
+              <Text style={styles.cardTitle}>{dept.nombre}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      ) : (
+        <ScrollView>
+          <Text style={styles.subtitle}>Destinos turísticos en {selectedDept.nombre}</Text>
+          {selectedDept.lugares.map((lugar, index) => (
+            <View key={index} style={styles.lugarCard}>
+              <Image source={{ uri: lugar.imagen }} style={styles.lugarImage} />
+              <Text style={styles.lugarTitle}>{lugar.nombre}</Text>
+              <Text style={styles.lugarDescripcion}>{lugar.descripcion}</Text>
+            </View>
+          ))}
+          <TouchableOpacity style={styles.backButton} onPress={() => setSelectedDept(null)}>
+            <Text style={styles.backButtonText}>Volver a departamentos</Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -232,38 +253,82 @@ export default function Destinos() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20, // Incrementa el padding para mayor separación en la web
-    backgroundColor: '#f4f4f4',
+    padding: 10,
+    backgroundColor: '#FFFF',
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#6F73D2',
+    marginBottom: 10,
   },
   cardContainer: {
-    justifyContent: 'space-between',
+    flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   card: {
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 10,
-    marginBottom: 20, // Aumenta el espacio entre las tarjetas
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2, // Sombras más marcadas para mayor efecto de elevación
+    shadowOpacity: 0.1,
     shadowRadius: 5,
-    overflow: 'hidden', // Oculta cualquier parte que sobresalga
+    transition: 'transform 0.3s ease-in-out',
+  },
+  cardWeb: {
+    width: '30%',
   },
   cardImage: {
     width: '100%',
-    height: 200, // Fija el tamaño de la imagen para evitar que se deforme
+    height: 150,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    resizeMode: 'cover', // Ajusta la imagen para que siempre se vea bien
-  },
-  cardContent: {
-    padding: 15, // Añade padding dentro de cada tarjeta para el texto
-    alignItems: 'center',
   },
   cardTitle: {
-    fontSize: 18, // Fuente más grande para una mejor legibilidad
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#3B3B98',
+    padding: 10,
+    color: '#6F73D2',
+  },
+  lugarCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  lugarImage: {
+    width: '100%',
+    height: 250,
+    borderRadius: 10,
+  },
+  lugarTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+    color: '#6F73D2',
+  },
+  lugarDescripcion: {
+    fontSize: 16,
+    marginTop: 5,
+    color: '#6f6f6f',
+  },
+  backButton: {
+    marginTop: 20,
+    backgroundColor: '#6F73D2',
+    padding: 10,
+    borderRadius: 5,
+  },
+  backButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
