@@ -165,7 +165,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor:'rgba(255, 255, 255, 0.8)',
     alignItems: "center",
     justifyContent: "center",
   },
@@ -174,13 +174,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontStyle: "italic",
     textAlign: "center",
+    color: "#6F73D2",
+    
   },
   formulario: {
     width: "80%",
-    backgroundColor: "#7ef0fc",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 20,
     borderRadius: 10,
-    boxShadow: "0px 0px 10px 5px #096873",
+    boxShadow: "0px 0px 10px 5px #9d9d9d",
     
   },
   TextInput: {
@@ -189,24 +191,25 @@ const styles = StyleSheet.create({
   },
 
   formularioInput: {
-    backgroundColor: "#fff",
+    backgroundColor: "#6f6f6f",
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    color: "white",
   },
   containerButtons: {
     flexDirection: "row",
     justifyContent: "space-around",
   },
   buttonCreate: {
-    backgroundColor: "#1500ff",
+    backgroundColor: "#3498db",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
     marginBottom: 10,
   },
   buttonLogin: {
-    backgroundColor: "#7fe700",
+    backgroundColor: "#73ce04",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
