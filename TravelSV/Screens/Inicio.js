@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions, ImageBackground } from 'react-native';
 
 export default function Inicio({ navigation }) {
   const { width } = useWindowDimensions(); // Detecta el ancho de la pantalla
@@ -7,38 +7,51 @@ export default function Inicio({ navigation }) {
   const isMobile = width < 768; // Si el ancho es menor a 768px, lo tratamos como móvil
 
   return (
-    <View style={styles.container}>
-      <Text style={[styles.title, isMobile && styles.titleMobile]}>
-        ¡Bienvenidos a TravelSV!
-      </Text>
-      <Text style={[styles.description, isMobile && styles.descriptionMobile]}>
-        Explora los destinos turísticos más asombrosos de El Salvador, desde playas paradisíacas hasta volcanes majestuosos, además descubre dónde hospedarte y disfruta de la riqueza cultural y natural que ofrece este hermoso país.
-      </Text>
+    <ImageBackground
+      source={require('../assets/homesky.jpeg')}
+      style={styles.background}
+      resizeMode="cover" // Esto asegura que la imagen cubra toda el área del fondo
+    >
+      <View style={styles.overlay}>
+        <Text style={[styles.title, isMobile && styles.titleMobile]}>
+          ¡Bienvenidos a TravelSV!
+        </Text>
+        <Text style={[styles.description, isMobile && styles.descriptionMobile]}>
+          Explora los destinos turísticos más asombrosos de El Salvador, desde playas paradisíacas hasta volcanes majestuosos, además descubre dónde hospedarte y disfruta de la riqueza cultural y natural que ofrece este hermoso país.
+        </Text>
 
-      <TouchableOpacity
-        style={[styles.button, isMobile && styles.buttonMobile]}
-        onPress={() => navigation.navigate('Destinos')}
-      >
-        <Text style={styles.buttonText}>Ver Destinos</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, isMobile && styles.buttonMobile]}
+          onPress={() => navigation.navigate('Destinos')}
+        >
+          <Text style={styles.buttonText}>Ver Destinos</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, isMobile && styles.buttonMobile]}
-        onPress={() => navigation.navigate('Hospedajes')}
-      >
-        <Text style={styles.buttonText}>Ver Hospedajes</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          style={[styles.button, isMobile && styles.buttonMobile]}
+          onPress={() => navigation.navigate('Hospedajes')}
+        >
+          <Text style={styles.buttonText}>Ver Hospedajes</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff', // Fondo blanco
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Fondo blanco semi-transparente para mejorar la legibilidad del texto
   },
   title: {
     fontSize: 28,
