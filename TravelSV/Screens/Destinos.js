@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, useWindowDimensions} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Button, useWindowDimensions } from 'react-native';
 
 export default function Destinos() {
   const { width } = useWindowDimensions();
   const [selectedDept, setSelectedDept] = useState(null);  // Estado del departamento seleccionado
+  const [newOpinion, setNewOpinion] = useState({ usuario: '', valoracion: '', comentario: '' }); // Estado para nuevas opiniones
+  
 
   // Datos locales de departamentos y destinos turísticos
   const departamentosData = [
@@ -220,6 +222,23 @@ export default function Destinos() {
     setSelectedDept(dept);  // Actualizar el estado con el departamento seleccionado
   };
 
+  const handleOpinionChange = (field, value) => {
+    setNewOpinion({ ...newOpinion, [field]: value }); // Actualizar el estado de la nueva opinión
+  };
+
+  const handleAddOpinion = (lugar) => {
+    if (newOpinion.usuario && newOpinion.valoracion && newOpinion.comentario) {
+      // Agregar la nueva opinión al lugar seleccionado
+      lugar.opiniones = lugar.opiniones || []; // Asegurarse de que el campo opiniones exista
+      lugar.opiniones.push({ ...newOpinion });
+      setNewOpinion({ usuario: '', valoracion: '', comentario: '' }); // Reiniciar el formulario
+    } else {
+      alert('Por favor, completa todos los campos.');
+    }
+  };
+
+
+
   return (
     <View style={styles.container}>
       {selectedDept === null ? (
@@ -234,13 +253,58 @@ export default function Destinos() {
       ) : (
         <ScrollView>
           <Text style={styles.subtitle}>Destinos turísticos en {selectedDept.nombre}</Text>
-          {selectedDept.lugares.map((lugar, index) => (
-            <View key={index} style={styles.lugarCard}>
-              <Image source={{ uri: lugar.imagen }} style={styles.lugarImage} />
-              <Text style={styles.lugarTitle}>{lugar.nombre}</Text>
-              <Text style={styles.lugarDescripcion}>{lugar.descripcion}</Text>
-            </View>
-          ))}
+          {selectedDept.lugares && selectedDept.lugares.length > 0 ? (
+            selectedDept.lugares.map((lugar, index) => (
+              <View key={index} style={styles.lugarCard}>
+                <Image source={{ uri: lugar.imagen }} style={styles.lugarImage} />
+                <Text style={styles.lugarTitle}>{lugar.nombre}</Text>
+                <Text style={styles.lugarDescripcion}>{lugar.descripcion}</Text>
+
+                {/* Sección de opiniones */}
+                <View style={styles.opinionesContainer}>
+                  <Text style={styles.opinionesTitle}>Opiniones de los usuarios:</Text>
+                  {lugar.opiniones && lugar.opiniones.length > 0 ? (
+                    lugar.opiniones.map((opinion, idx) => (
+                      <View key={idx} style={styles.opinion}>
+                        <Text style={styles.opinionUsuario}>{opinion.usuario}</Text>
+                        <Text>Valoración: {opinion.valoracion} / 5</Text>
+                        <Text>{opinion.comentario}</Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text>No hay opiniones disponibles.</Text>
+                  )}
+                </View>
+
+                {/* Formulario para añadir opinión */}
+                <View style={styles.formContainer}>
+                  <Text style={styles.formTitle}>Deja tu opinión:</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Tu nombre"
+                    value={newOpinion.usuario}
+                    onChangeText={(value) => handleOpinionChange('usuario', value)}
+                  />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Valoración (1-5)"
+                    value={newOpinion.valoracion}
+                    keyboardType="numeric"
+                    onChangeText={(value) => handleOpinionChange('valoracion', value)}
+                  />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Comentario"
+                    value={newOpinion.comentario}
+                    onChangeText={(value) => handleOpinionChange('comentario', value)}
+                  />
+                  <Button title="Enviar Opinión" onPress={() => handleAddOpinion(lugar)} />
+                </View>
+              </View>
+            ))
+          ) : (
+            <Text>No hay destinos turísticos disponibles en este departamento.</Text>
+          )}
           <TouchableOpacity style={styles.backButton} onPress={() => setSelectedDept(null)}>
             <Text style={styles.backButtonText}>Volver a departamentos</Text>
           </TouchableOpacity>
@@ -330,5 +394,40 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  opinionesContainer: {
+    marginTop: 15,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    padding: 10,
+    borderRadius: 10,
+  },
+  opinionesTitle: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  opinion: {
+    marginBottom: 10,
+  },
+  opinionUsuario: {
+    fontWeight: 'bold',
+  },
+  formContainer: {
+    marginTop: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 10,
+  },
+  formTitle: {
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
 });
