@@ -177,9 +177,11 @@ const styles = StyleSheet.create({
   },
   formulario: {
     width: "80%",
-    backgroundColor: "#00e5ff",
+    backgroundColor: "#7ef0fc",
     padding: 20,
     borderRadius: 10,
+    boxShadow: "0px 0px 10px 5px #096873",
+    
   },
   TextInput: {
     fontSize: 20,
